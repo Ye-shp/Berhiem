@@ -19,7 +19,8 @@ import { useToast } from "@/hooks/use-toast";
 const formSchema = z.object({
   challengeName: z.string().min(3, "Challenge name must be at least 3 characters"),
   challengeDescription: z.string().min(10, "Description must be at least 10 characters"),
-  platform: z.enum(['facebook', 'twitter', 'instagram']),
+  challengeImageUrl: z.string().url("Must be a valid URL for the challenge image"),
+  platform: z.enum(['imessage', 'instagram']),
   brandName: z.string().min(2, "Brand name is required"),
   primaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, "Invalid hex color (e.g. #RRGGBB)"),
   secondaryColor: z.string().regex(/^#[0-9A-Fa-f]{6}$/, "Invalid hex color (e.g. #RRGGBB)"),
@@ -38,7 +39,8 @@ export function SharePreviewGenerator() {
     defaultValues: {
       challengeName: "My Awesome Challenge",
       challengeDescription: "This is a super fun challenge where you can win amazing prizes by showcasing your creativity!",
-      platform: 'twitter',
+      challengeImageUrl: "https://picsum.photos/seed/defaultchallenge/600/300", // Default placeholder
+      platform: 'instagram',
       brandName: "ChallengerVerse",
       primaryColor: "#F5F500", // Yellow
       secondaryColor: "#000000", // Black
@@ -58,9 +60,13 @@ export function SharePreviewGenerator() {
       });
     } catch (error) {
       console.error("Error generating share preview:", error);
+      let errorMessage = "Something went wrong. Please try again.";
+      if (error instanceof Error) {
+        errorMessage = error.message;
+      }
       toast({
         title: "Error Generating Preview",
-        description: "Something went wrong. Please try again. Check console for details.",
+        description: errorMessage,
         variant: "destructive",
       });
     } finally {
@@ -105,6 +111,17 @@ export function SharePreviewGenerator() {
               />
               <FormField
                 control={form.control}
+                name="challengeImageUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Challenge Image URL</FormLabel>
+                    <FormControl><Input placeholder="https://example.com/your-challenge-image.jpg" {...field} /></FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
                 name="platform"
                 render={({ field }) => (
                   <FormItem>
@@ -116,9 +133,8 @@ export function SharePreviewGenerator() {
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        <SelectItem value="facebook">Facebook</SelectItem>
-                        <SelectItem value="twitter">Twitter</SelectItem>
                         <SelectItem value="instagram">Instagram</SelectItem>
+                        <SelectItem value="imessage">iMessage</SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -208,7 +224,6 @@ export function SharePreviewGenerator() {
                 width={500} 
                 height={250} 
                 className="rounded-md border border-border object-contain aspect-[2/1]"
-                data-ai-hint="social media post"
               />
               <p className="text-xs text-muted-foreground mt-2 italic text-center">{preview.altText}</p>
             </div>
@@ -221,7 +236,7 @@ export function SharePreviewGenerator() {
           )}
         </CardContent>
          <CardFooter className="text-xs text-muted-foreground pt-4">
-            Note: AI image generation is experimental. Results may vary. The actual image might be a placeholder or a stylized representation.
+            Note: AI image generation is experimental. Results may vary. Ensure your prompt and input image are clear.
         </CardFooter>
       </Card>
     </div>

@@ -15,12 +15,12 @@ export function UserProfile({ user }: UserProfileProps) {
     <Card className="shadow-xl overflow-hidden">
       <CardHeader className="p-0 relative">
         {/* Placeholder for a cover image */}
-        <div className="h-48 bg-gradient-to-r from-primary/30 to-accent/30" data-ai-hint="abstract background">
+        <div className="h-48 bg-gradient-to-r from-primary/30 to-accent/30">
            <Image src="https://picsum.photos/seed/usercover/1200/300" alt="Profile cover" layout="fill" objectFit="cover" />
         </div>
         <div className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2">
           <Avatar className="h-32 w-32 border-4 border-background shadow-lg">
-            <AvatarImage src={user.avatarUrl} alt={user.name} data-ai-hint="person photo" />
+            <AvatarImage src={user.avatarUrl} alt={user.name} />
             <AvatarFallback className="text-4xl">{user.name.substring(0, 2).toUpperCase()}</AvatarFallback>
           </Avatar>
         </div>

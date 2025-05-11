@@ -43,7 +43,6 @@ export function ChallengeCard({ challenge, isPrioritized = false }: ChallengeCar
             alt={challenge.title}
             layout="fill"
             objectFit="cover"
-            data-ai-hint="challenge theme"
           />
            <Badge className={`absolute top-2 right-2 capitalize ${statusColors[challenge.status]}`}>
             {challenge.status}

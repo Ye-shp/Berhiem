@@ -40,7 +40,7 @@ export function Leaderboard({ entries }: LeaderboardProps) {
               <TableCell>
                 <div className="flex items-center space-x-3">
                   <Avatar className="h-10 w-10">
-                    <AvatarImage src={entry.userAvatarUrl} alt={entry.userName} data-ai-hint="person avatar" />
+                    <AvatarImage src={entry.userAvatarUrl} alt={entry.userName} />
                     <AvatarFallback>{entry.userName.substring(0, 2).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <span className="font-medium">{entry.userName}</span>

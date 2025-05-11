@@ -7,10 +7,15 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Leaderboard } from './Leaderboard';
 import { SubmissionGallery } from './SubmissionGallery';
-import { CalendarDays, Info, ListOrdered, Trophy, Users, Share2, Edit3, Image as ImageIcon, Link as LinkIcon, Mic, FileText } from 'lucide-react';
+import { CalendarDays, Info, ListOrdered, Trophy, Users, Share2, Edit3, Image as ImageIcon, Link as LinkIcon, Mic, FileText, AlertTriangle } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import React, { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
+import { useRouter } from 'next/navigation';
+import { useToast } from '@/hooks/use-toast';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
 
 interface ChallengeDetailClientProps {
   challenge: Challenge;
@@ -20,6 +25,9 @@ interface ChallengeDetailClientProps {
 
 export function ChallengeDetailClient({ challenge, leaderboardEntries, submissions }: ChallengeDetailClientProps) {
   const [timeLeft, setTimeLeft] = useState<string>("");
+  const { user, loading: authLoading } = useAuth();
+  const router = useRouter();
+  const { toast } = useToast();
 
   useEffect(() => {
     const calculateTimeLeft = () => {
@@ -40,9 +48,9 @@ export function ChallengeDetailClient({ challenge, leaderboardEntries, submissio
       setTimeLeft(`${days}d ${hours}h ${minutes}m ${seconds}s`);
     };
 
-    calculateTimeLeft();
+    calculateTimeLeft(); // Initial call
     const timer = setInterval(calculateTimeLeft, 1000);
-    return () => clearInterval(timer);
+    return () => clearInterval(timer); // Cleanup timer on component unmount
   }, [challenge.endDate]);
 
   const submissionTypeIcons = {
@@ -52,12 +60,32 @@ export function ChallengeDetailClient({ challenge, leaderboardEntries, submissio
     audio: <Mic className="h-5 w-5 mr-2 text-primary" />,
   };
 
+  const handleSubmitEntry = () => {
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please login to submit an entry.",
+        variant: "destructive",
+        action: <Button onClick={() => router.push(`/login?redirect=/challenge/${challenge.id}`)}>Login</Button>
+      });
+      return;
+    }
+    // TODO: Implement actual submission logic (e.g., open a modal, navigate to a submission form)
+    toast({
+      title: "Submission In Progress (Not Implemented)",
+      description: `You are logged in as ${user.email}. Actual submission form is needed here.`,
+    });
+    console.log("User attempting to submit entry:", user.uid, "for challenge:", challenge.id);
+  };
+
+  const canSubmit = challenge.status === 'active' && timeLeft !== "Challenge Ended";
+
   return (
     <div className="space-y-8">
       <Card className="overflow-hidden shadow-xl">
         {challenge.imageUrl && (
           <div className="relative h-64 md:h-96 w-full">
-            <Image src={challenge.imageUrl} alt={challenge.title} layout="fill" objectFit="cover" priority data-ai-hint="challenge banner" />
+            <Image src={challenge.imageUrl} alt={challenge.title} layout="fill" objectFit="cover" priority />
             <div className="absolute inset-0 bg-black/30" />
             <div className="absolute bottom-0 left-0 p-6 md:p-8">
               <h1 className="text-3xl md:text-5xl font-extrabold text-white shadow-md">{challenge.title}</h1>
@@ -71,7 +99,7 @@ export function ChallengeDetailClient({ challenge, leaderboardEntries, submissio
               <CalendarDays className="h-8 w-8 text-primary" />
               <div>
                 <p className="text-sm text-muted-foreground">Time Remaining</p>
-                <p className="text-lg font-semibold text-accent">{timeLeft}</p>
+                <p className={`text-lg font-semibold ${timeLeft === "Challenge Ended" ? "text-red-500" : "text-accent"}`}>{timeLeft}</p>
               </div>
             </div>
             <div className="flex items-center space-x-3 p-4 bg-card-foreground/5 rounded-lg">
@@ -91,14 +119,40 @@ export function ChallengeDetailClient({ challenge, leaderboardEntries, submissio
           </div>
 
           <div className="flex flex-col md:flex-row gap-4 md:gap-6 mb-8">
-             <Button size="lg" className="w-full md:w-auto bg-primary hover:bg-primary/90 text-primary-foreground">
-              <Edit3 className="mr-2 h-5 w-5" /> Submit Entry
+             <Button 
+                size="lg" 
+                className="w-full md:w-auto bg-primary hover:bg-primary/90 text-primary-foreground"
+                onClick={handleSubmitEntry}
+                disabled={authLoading || !canSubmit}
+              >
+              <Edit3 className="mr-2 h-5 w-5" /> 
+              {authLoading ? "Loading..." : !user ? "Login to Participate" : canSubmit ? "Submit Entry" : "Submissions Closed"}
             </Button>
             <Button size="lg" variant="outline" className="w-full md:w-auto">
               <Share2 className="mr-2 h-5 w-5" /> Share Challenge
             </Button>
           </div>
           
+          {!canSubmit && challenge.status !== 'upcoming' && (
+            <Alert variant="destructive" className="mb-6">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Submissions Closed</AlertTitle>
+              <AlertDescription>
+                This challenge has ended or is not currently active for submissions.
+              </AlertDescription>
+            </Alert>
+          )}
+           {challenge.status === 'upcoming' && (
+            <Alert className="mb-6 bg-blue-500/10 border-blue-500/30 text-blue-300">
+              <AlertTriangle className="h-4 w-4" />
+              <AlertTitle>Challenge Upcoming!</AlertTitle>
+              <AlertDescription>
+                This challenge has not started yet. Check back on {new Date(challenge.startDate).toLocaleDateString()}!
+              </AlertDescription>
+            </Alert>
+          )}
+
+
           <Separator className="my-6" />
 
           <Tabs defaultValue="details" className="w-full">
@@ -122,7 +176,6 @@ export function ChallengeDetailClient({ challenge, leaderboardEntries, submissio
                 <CardHeader><CardTitle>Challenge Rules</CardTitle></CardHeader>
                 <CardContent className="prose prose-invert max-w-none text-foreground">
                   <p>{challenge.rules}</p>
-                  {/* For more structured rules, you might parse markdown or use a list */}
                 </CardContent>
               </Card>
             </TabsContent>

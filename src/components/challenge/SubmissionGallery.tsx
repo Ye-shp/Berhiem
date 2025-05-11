@@ -19,7 +19,7 @@ export function SubmissionGallery({ submissions, submissionType }: SubmissionGal
       case 'photo':
         return submission.contentUrl ? (
           <div className="relative aspect-video w-full overflow-hidden rounded-md">
-            <Image src={submission.contentUrl} alt={`Submission by ${submission.userName}`} layout="fill" objectFit="cover" data-ai-hint="user submission" />
+            <Image src={submission.contentUrl} alt={`Submission by ${submission.userName}`} layout="fill" objectFit="cover" />
           </div>
         ) : <p className="text-muted-foreground">Image not available</p>;
       case 'text':
@@ -60,7 +60,7 @@ export function SubmissionGallery({ submissions, submissionType }: SubmissionGal
             <div className="flex items-center justify-between pt-3">
               <div className="flex items-center space-x-2">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={submission.userAvatarUrl} alt={submission.userName} data-ai-hint="participant avatar" />
+                  <AvatarImage src={submission.userAvatarUrl} alt={submission.userName} />
                   <AvatarFallback>{submission.userName.substring(0, 1)}</AvatarFallback>
                 </Avatar>
                 <span className="text-xs font-medium text-muted-foreground">{submission.userName}</span>
