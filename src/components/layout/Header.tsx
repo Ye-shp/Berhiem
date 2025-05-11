@@ -1,3 +1,4 @@
+'use client';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Flame, Home, UserCircle, Presentation, Bot, LogIn, LogOut, UserPlus } from 'lucide-react';
