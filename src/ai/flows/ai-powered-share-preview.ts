@@ -44,30 +44,25 @@ const generateSharePreviewFlow = ai.defineFlow(
       prompt: [
         { media: { url: input.challengeImageUrl } },
         {
-            text: `You are an AI assistant for ChallengerVerse.
+            text: `You are an AI assistant for Berhiem.
 Given the challenge image (provided as media), challenge details, and target social media platform, your tasks are:
 
-1.  **Generate a new, engaging share preview image.** This image should be inspired by or incorporate elements from the provided challenge image. It must be optimized for "${input.platform}" (consider typical aspect ratios and styles; make a best effort). The brand's colors are: Primary: ${input.primaryColor}, Secondary: ${input.secondaryColor}, Accent: ${input.accentColor}. The challenge is "${input.challengeName}" by "${input.brandName}". Description: "${input.challengeDescription}".
+1.  **Use the provided challenge image directly** for the share preview. Do NOT generate a new image.
+2.  **Generate a concise and compelling alt text for the PROVIDED challenge image.** This alt text should be descriptive and relevant to the challenge and the visual.
 
-2.  **Generate a concise and compelling alt text for the NEWLY generated image.** This alt text should be descriptive and relevant to the challenge and the visual.
+The brand's colors are: Primary: ${input.primaryColor}, Secondary: ${input.secondaryColor}, Accent: ${input.accentColor}. The challenge is "${input.challengeName}" by "${input.brandName}". Description: "${input.challengeDescription}". The target platform is "${input.platform}".
 
-Return ONLY the alt text as your text response. The generated image will be the media response.`,
+Return ONLY the alt text as your text response. The provided challenge image URL will be used as the image for the preview.`,
         },
       ],
       config: {
-        responseModalities: ['TEXT', 'IMAGE'],
-        // Adjust safety settings if needed, though defaults are usually fine.
-        // Example:
-        // safetySettings: [
-        //   { category: 'HARM_CATEGORY_HARASSMENT', threshold: 'BLOCK_NONE' },
-        //   { category: 'HARM_CATEGORY_HATE_SPEECH', threshold: 'BLOCK_NONE' },
-        // ],
+        responseModalities: ['TEXT'], // Only expect text back as we are re-using the input image
       },
     });
 
     return {
-      imageUrl: response.media?.url ?? '', // Fallback if image generation fails
-      altText: response.text?.trim() || `${input.challengeName} - Shared on ${input.platform}`, // Fallback for alt text
+      imageUrl: input.challengeImageUrl, // Use the original challenge image URL
+      altText: response.text?.trim() || `${input.challengeName} - Shared on ${input.platform} by ${input.brandName}`, // Fallback for alt text
     };
   }
 );

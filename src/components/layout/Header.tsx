@@ -1,23 +1,23 @@
 'use client';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
-import { Flame, Home, UserCircle, Presentation, Bot, LogIn, LogOut, UserPlus } from 'lucide-react';
+import { Flame, Home, UserCircle, Presentation, Bot, LogIn, LogOut, UserPlus, PlusCircle } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from 'next/navigation'; // next/navigation for App Router
+import { useToast } from '@/hooks/use-toast';
+
 
 export function Header() {
   const { user, loading, logout } = useAuth();
   const router = useRouter();
+  const { toast } = useToast();
 
   const handleCreateChallengeClick = () => {
-    if (!user) {
-      router.push('/login?redirect=/create-challenge'); // Assuming /create-challenge page, adjust if needed
-    } else {
-      // router.push('/create-challenge'); // Navigate to create challenge page if it exists
-      // For now, let's just log or toast, as /create-challenge page isn't defined
-      console.log("User wants to create a challenge.");
-      // toast({ title: "Create Challenge", description: "This feature is coming soon!" });
-    }
+    // This navigation should ideally go to a dedicated /create-challenge page
+    // For now, it's a placeholder action.
+    // router.push('/create-challenge');
+    toast({ title: "Create Challenge", description: "This feature is coming soon!" });
+    console.log("User wants to create a challenge.");
   };
 
 
@@ -27,7 +27,7 @@ export function Header() {
         <Link href="/" className="flex items-center space-x-2">
           <Flame className="h-8 w-8 text-primary" />
           <span className="font-bold text-xl bg-gradient-to-r from-[var(--gradient-accent-from)] to-[var(--gradient-accent-to)] bg-clip-text text-transparent">
-            ChallengerVerse
+            Berhiem
           </span>
         </Link>
         <nav className="flex items-center space-x-1 sm:space-x-2">
@@ -56,15 +56,19 @@ export function Header() {
           ) : user ? (
             <>
               <Button variant="ghost" size="sm" asChild>
-                {/* For demo, linking to user1. In a real app, user.uid would be from Firebase.
-                    And profile page would fetch data based on this UID.
-                    Current mockData.ts only has 'user1' and 'user2'.
-                    If user.uid is not 'user1' or 'user2', /profile/[uid] will 404 with current mock data.
-                */}
                 <Link href={`/profile/${user.uid || 'user1'}`} className="flex items-center">
                   <UserCircle className="mr-1 h-4 w-4" />
                   Profile
                 </Link>
+              </Button>
+              <Button 
+                variant="default"
+                size="sm"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                onClick={handleCreateChallengeClick}
+              >
+                <PlusCircle className="mr-1 h-4 w-4" />
+                Create Challenge
               </Button>
               <Button variant="ghost" size="sm" onClick={logout} className="flex items-center">
                 <LogOut className="mr-1 h-4 w-4" />
@@ -87,14 +91,6 @@ export function Header() {
               </Button>
             </>
           )}
-          
-          <Button 
-            className="bg-primary hover:bg-primary/90 text-primary-foreground"
-            onClick={handleCreateChallengeClick}
-            disabled={loading}
-          >
-            Create Challenge
-          </Button>
         </nav>
       </div>
     </header>

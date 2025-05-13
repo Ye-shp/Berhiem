@@ -8,7 +8,7 @@ import { Toaster } from '@/components/ui/toaster';
 
 
 export const metadata: Metadata = {
-  title: 'ChallengerVerse',
+  title: 'Berhiem',
   description: 'Join and create exciting challenges!',
 };
 

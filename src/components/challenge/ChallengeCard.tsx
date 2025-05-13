@@ -37,7 +37,7 @@ export function ChallengeCard({ challenge, isPrioritized = false }: ChallengeCar
   return (
     <Card className={`overflow-hidden shadow-lg hover:shadow-primary/20 transition-shadow duration-300 ${isPrioritized ? 'border-2 border-primary' : 'border-border'}`}>
       {challenge.imageUrl && (
-        <div className="relative h-48 w-full">
+        <div className="relative h-48 w-full" data-ai-hint="challenge image">
           <Image
             src={challenge.imageUrl}
             alt={challenge.title}

@@ -40,6 +40,7 @@ export interface Challenge {
   participantsCount: number;
   submissions: Submission[]; // Can be paginated or limited
   status: 'active' | 'upcoming' | 'ended' | 'draft';
+  winnerSelectionMethod: 'communityVote' | 'creatorSelected';
 }
 
 export interface ChallengeParticipation {
@@ -77,3 +78,4 @@ export interface LeaderboardEntry {
 }
 
 export type SocialPlatform = 'facebook' | 'twitter' | 'instagram';
+

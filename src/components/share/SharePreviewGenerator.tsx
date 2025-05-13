@@ -15,6 +15,8 @@ import Image from 'next/image';
 import { generateSharePreview, type GenerateSharePreviewInput, type GenerateSharePreviewOutput } from '@/ai/flows/ai-powered-share-preview';
 import { Loader2 } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
+import { DEFAULT_BRAND_NAME_FOR_AI } from '@/data/mockData';
+
 
 const formSchema = z.object({
   challengeName: z.string().min(3, "Challenge name must be at least 3 characters"),
@@ -41,7 +43,7 @@ export function SharePreviewGenerator() {
       challengeDescription: "This is a super fun challenge where you can win amazing prizes by showcasing your creativity!",
       challengeImageUrl: "https://picsum.photos/seed/defaultchallenge/600/300", // Default placeholder
       platform: 'instagram',
-      brandName: "ChallengerVerse",
+      brandName: DEFAULT_BRAND_NAME_FOR_AI,
       primaryColor: "#F5F500", // Yellow
       secondaryColor: "#000000", // Black
       accentColor: "#FF3A00", // Red
@@ -78,9 +80,9 @@ export function SharePreviewGenerator() {
     <div className="grid md:grid-cols-2 gap-8 items-start">
       <Card className="shadow-xl">
         <CardHeader>
-          <CardTitle className="text-2xl">AI Share Preview Generator</CardTitle>
+          <CardTitle className="text-2xl">AI Share Preview Generator for Berhiem</CardTitle>
           <CardDescription>
-            Generate a social media share preview for your challenge using AI. 
+            Generate a social media share preview for your Berhiem challenge using AI. 
             Fill in the details below to see the magic happen.
           </CardDescription>
         </CardHeader>
@@ -224,6 +226,7 @@ export function SharePreviewGenerator() {
                 width={500} 
                 height={250} 
                 className="rounded-md border border-border object-contain aspect-[2/1]"
+                data-ai-hint="social media post"
               />
               <p className="text-xs text-muted-foreground mt-2 italic text-center">{preview.altText}</p>
             </div>

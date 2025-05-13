@@ -7,7 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Leaderboard } from './Leaderboard';
 import { SubmissionGallery } from './SubmissionGallery';
-import { CalendarDays, Info, ListOrdered, Trophy, Users, Share2, Edit3, Image as ImageIcon, Link as LinkIcon, Mic, FileText, AlertTriangle } from 'lucide-react';
+import { CalendarDays, Info, ListOrdered, Trophy, Users, Share2, Edit3, Image as ImageIcon, Link as LinkIcon, Mic, FileText, AlertTriangle, Gavel } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import React, { useState, useEffect } from 'react';
@@ -70,10 +70,9 @@ export function ChallengeDetailClient({ challenge, leaderboardEntries, submissio
       });
       return;
     }
-    // TODO: Implement actual submission logic (e.g., open a modal, navigate to a submission form)
     toast({
-      title: "Submission In Progress (Not Implemented)",
-      description: `You are logged in as ${user.email}. Actual submission form is needed here.`,
+      title: "Ready to Submit!",
+      description: `You are logged in as ${user.email}. Proceed with your submission. (Actual form/modal needed here)`,
     });
     console.log("User attempting to submit entry:", user.uid, "for challenge:", challenge.id);
   };
@@ -84,7 +83,7 @@ export function ChallengeDetailClient({ challenge, leaderboardEntries, submissio
     <div className="space-y-8">
       <Card className="overflow-hidden shadow-xl">
         {challenge.imageUrl && (
-          <div className="relative h-64 md:h-96 w-full">
+          <div className="relative h-64 md:h-96 w-full" data-ai-hint="event banner">
             <Image src={challenge.imageUrl} alt={challenge.title} layout="fill" objectFit="cover" priority />
             <div className="absolute inset-0 bg-black/30" />
             <div className="absolute bottom-0 left-0 p-6 md:p-8">
@@ -94,7 +93,7 @@ export function ChallengeDetailClient({ challenge, leaderboardEntries, submissio
           </div>
         )}
         <CardContent className="p-6 md:p-8">
-          <div className="grid md:grid-cols-3 gap-6 mb-6">
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6">
             <div className="flex items-center space-x-3 p-4 bg-card-foreground/5 rounded-lg">
               <CalendarDays className="h-8 w-8 text-primary" />
               <div>
@@ -114,6 +113,13 @@ export function ChallengeDetailClient({ challenge, leaderboardEntries, submissio
               <div>
                 <p className="text-sm text-muted-foreground">Submission Type</p>
                 <p className="text-lg font-semibold capitalize">{challenge.submissionType}</p>
+              </div>
+            </div>
+            <div className="flex items-center space-x-3 p-4 bg-card-foreground/5 rounded-lg">
+              <Gavel className="h-8 w-8 text-primary" />
+              <div>
+                <p className="text-sm text-muted-foreground">Winner Selection</p>
+                <p className="text-lg font-semibold capitalize">{challenge.winnerSelectionMethod === 'communityVote' ? 'Community Vote' : 'Creator Selected'}</p>
               </div>
             </div>
           </div>

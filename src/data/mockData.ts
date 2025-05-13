@@ -100,6 +100,7 @@ const mockChallenges: Challenge[] = [
     participantsCount: 120,
     submissions: [mockSubmissions[0]],
     status: 'active',
+    winnerSelectionMethod: 'communityVote',
   },
   {
     id: 'challenge2',
@@ -115,6 +116,7 @@ const mockChallenges: Challenge[] = [
     participantsCount: 75,
     submissions: [mockSubmissions[1]],
     status: 'ended',
+    winnerSelectionMethod: 'creatorSelected',
   },
   {
     id: 'challenge3',
@@ -130,6 +132,7 @@ const mockChallenges: Challenge[] = [
     participantsCount: 0,
     submissions: [mockSubmissions[2]],
     status: 'upcoming',
+    winnerSelectionMethod: 'creatorSelected',
   },
    {
     id: 'challenge4',
@@ -145,6 +148,7 @@ const mockChallenges: Challenge[] = [
     participantsCount: 45,
     submissions: [],
     status: 'active',
+    winnerSelectionMethod: 'communityVote',
   },
 ];
 
@@ -213,3 +217,6 @@ export const getRewardsByUserId = async (userId: string): Promise<Reward[]> => {
     }
     return new Promise(resolve => setTimeout(() => resolve([]), 500));
 };
+
+// Default brand name for AI share preview, can be overridden in the form.
+export const DEFAULT_BRAND_NAME_FOR_AI = "Berhiem";

@@ -20,7 +20,7 @@ export function BrandProfile({ brand }: BrandProfileProps) {
     <Card className="shadow-lg">
       <CardHeader className="flex flex-col items-center text-center p-6 md:p-8 bg-card-foreground/5">
         {brand.logoUrl && (
-          <div className="relative h-32 w-32 mb-4 rounded-full overflow-hidden border-4 border-primary shadow-md">
+          <div className="relative h-32 w-32 mb-4 rounded-full overflow-hidden border-4 border-primary shadow-md" data-ai-hint="brand logo">
             <Image src={brand.logoUrl} alt={`${brand.name} logo`} layout="fill" objectFit="cover" />
           </div>
         )}

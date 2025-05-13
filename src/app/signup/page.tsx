@@ -46,7 +46,7 @@ export default function SignupPage() {
       await createUserWithEmailAndPassword(auth, data.email, data.password);
       toast({
         title: "Account Created Successfully",
-        description: "Welcome to ChallengerVerse! You can now log in.",
+        description: "Welcome to Berhiem! You can now log in.",
       });
       router.push('/login'); // Redirect to login page after successful signup
     } catch (error: any) {
@@ -65,7 +65,7 @@ export default function SignupPage() {
     <div className="flex items-center justify-center min-h-[calc(100vh-200px)]">
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader>
-          <CardTitle className="text-3xl font-bold text-center">Create Your ChallengerVerse Account</CardTitle>
+          <CardTitle className="text-3xl font-bold text-center">Create Your Berhiem Account</CardTitle>
           <CardDescription className="text-center">
             Join the community and start participating in exciting challenges!
           </CardDescription>

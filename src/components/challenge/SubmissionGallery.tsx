@@ -18,7 +18,7 @@ export function SubmissionGallery({ submissions, submissionType }: SubmissionGal
     switch (submissionType) {
       case 'photo':
         return submission.contentUrl ? (
-          <div className="relative aspect-video w-full overflow-hidden rounded-md">
+          <div className="relative aspect-video w-full overflow-hidden rounded-md" data-ai-hint="user submission photo">
             <Image src={submission.contentUrl} alt={`Submission by ${submission.userName}`} layout="fill" objectFit="cover" />
           </div>
         ) : <p className="text-muted-foreground">Image not available</p>;
