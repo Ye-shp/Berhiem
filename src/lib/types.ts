@@ -56,6 +56,8 @@ export interface Reward {
   description: string;
   challengeId?: string; // Optional: link to specific challenge
   dateEarned: string; // ISO Date string
+  isClaimed: boolean;
+  claimDetails?: string; // Instructions or details about the reward
 }
 
 export interface Submission {

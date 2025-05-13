@@ -11,7 +11,15 @@ const mockUsers: User[] = [
       { challengeId: 'challenge3', challengeTitle: 'Eco Innovators Hub', submissionDate: new Date(Date.now() - 86400000 * 2).toISOString(), status: 'participated' },
     ],
     rewardsEarned: [
-      { id: 'reward1', name: 'Grand Prize Winner Trophy', description: 'For winning the Creative Photo Contest', dateEarned: new Date(Date.now() - 86400000 * 4).toISOString(), challengeId: 'challenge1' },
+      { 
+        id: 'reward1', 
+        name: 'Grand Prize Winner Trophy', 
+        description: 'For winning the Creative Photo Contest', 
+        dateEarned: new Date(Date.now() - 86400000 * 4).toISOString(), 
+        challengeId: 'challenge1',
+        isClaimed: false,
+        claimDetails: 'Your trophy will be shipped to your registered address. Please confirm your address within 7 days.'
+      },
     ],
     followedBrands: [], // Will be populated later
     sharingStatistics: { totalShares: 25, challengesShared: 3 },
@@ -24,7 +32,17 @@ const mockUsers: User[] = [
     participationHistory: [
       { challengeId: 'challenge2', challengeTitle: 'Tech Startup Pitch', submissionDate: new Date(Date.now() - 86400000 * 10).toISOString(), status: 'participated' },
     ],
-    rewardsEarned: [],
+    rewardsEarned: [
+      {
+        id: 'reward4',
+        name: 'Participation Certificate',
+        description: 'For participating in the Tech Startup Pitch',
+        dateEarned: new Date(Date.now() - 86400000 * 9).toISOString(),
+        challengeId: 'challenge2',
+        isClaimed: true,
+        claimDetails: 'Certificate has been emailed to you.'
+      }
+    ],
     followedBrands: [], // Will be populated later
     sharingStatistics: { totalShares: 10, challengesShared: 1 },
   },
@@ -164,58 +182,87 @@ const mockLeaderboard: LeaderboardEntry[] = [
   { userId: 'userExternal2', userName: 'Diana Prince', userAvatarUrl: 'https://picsum.photos/seed/userExt2/50/50', score: 75, rank: 4 },
 ];
 
-const mockRewards: Reward[] = [
-    ...mockUsers[0].rewardsEarned,
-    { id: 'reward2', name: 'Early Bird Participant Badge', description: 'For joining challenges early!', dateEarned: new Date(Date.now() - 86400000 * 20).toISOString() },
-    { id: 'reward3', name: 'Top Sharer Bonus', description: 'For exceptional sharing efforts.', dateEarned: new Date(Date.now() - 86400000 * 1).toISOString() },
+const allMockRewards: Reward[] = [
+    ...mockUsers.flatMap(u => u.rewardsEarned),
+    { 
+      id: 'reward2', 
+      name: 'Early Bird Participant Badge', 
+      description: 'For joining challenges early!', 
+      dateEarned: new Date(Date.now() - 86400000 * 20).toISOString(),
+      isClaimed: true,
+      claimDetails: 'This badge has been automatically added to your profile.'
+    },
+    { 
+      id: 'reward3', 
+      name: 'Top Sharer Bonus - $25 Gift Card', 
+      description: 'For exceptional sharing efforts in Q1.', 
+      dateEarned: new Date(Date.now() - 86400000 * 1).toISOString(),
+      isClaimed: false,
+      claimDetails: 'Click "Claim Reward" to receive your $25 Amazon gift card code via email.'
+    },
 ];
 
 export const getChallenges = async (): Promise<Challenge[]> => {
-  return new Promise(resolve => setTimeout(() => resolve(mockChallenges), 500));
+  return new Promise(resolve => setTimeout(() => resolve(mockChallenges), 300));
 };
 
 export const getChallengeById = async (id: string): Promise<Challenge | undefined> => {
-  return new Promise(resolve => setTimeout(() => resolve(mockChallenges.find(c => c.id === id)), 500));
+  return new Promise(resolve => setTimeout(() => resolve(mockChallenges.find(c => c.id === id)), 300));
 };
 
 export const getBrands = async (): Promise<Brand[]> => {
-  return new Promise(resolve => setTimeout(() => resolve(mockBrands), 500));
+  return new Promise(resolve => setTimeout(() => resolve(mockBrands), 300));
 };
 
 export const getBrandById = async (id: string): Promise<Brand | undefined> => {
-  return new Promise(resolve => setTimeout(() => resolve(mockBrands.find(b => b.id === id)), 500));
+  return new Promise(resolve => setTimeout(() => resolve(mockBrands.find(b => b.id === id)), 300));
 };
 
 export const getUsers = async (): Promise<User[]> => {
-  return new Promise(resolve => setTimeout(() => resolve(mockUsers), 500));
+  return new Promise(resolve => setTimeout(() => resolve(mockUsers), 300));
 };
 
 export const getUserById = async (id: string): Promise<User | undefined> => {
-  return new Promise(resolve => setTimeout(() => resolve(mockUsers.find(u => u.id === id)), 500));
+  return new Promise(resolve => setTimeout(() => {
+    const user = mockUsers.find(u => u.id === id);
+    if (user) {
+      // Ensure user rewards are part of the allMockRewards pool for consistency if needed elsewhere
+      // or simply return the user as is if rewards are self-contained.
+      // For this setup, user.rewardsEarned is already populated.
+    }
+    resolve(user);
+  }, 300));
 };
 
 export const getSubmissionsByChallengeId = async (challengeId: string): Promise<Submission[]> => {
   return new Promise(resolve => setTimeout(() => {
     const challenge = mockChallenges.find(c => c.id === challengeId);
     resolve(challenge ? challenge.submissions : []);
-  }, 500));
+  }, 300));
 };
 
 export const getLeaderboardByChallengeId = async (challengeId: string): Promise<LeaderboardEntry[]> => {
-  // For now, return a generic leaderboard for any active/ended challenge
   const challenge = await getChallengeById(challengeId);
   if (challenge && (challenge.status === 'active' || challenge.status === 'ended')) {
-    return new Promise(resolve => setTimeout(() => resolve(mockLeaderboard), 500));
+    return new Promise(resolve => setTimeout(() => resolve(mockLeaderboard), 300));
   }
-  return new Promise(resolve => setTimeout(() => resolve([]), 500));
+  return new Promise(resolve => setTimeout(() => resolve([]), 300));
 };
 
 export const getRewardsByUserId = async (userId: string): Promise<Reward[]> => {
     const user = await getUserById(userId);
     if (user) {
-        return new Promise(resolve => setTimeout(() => resolve(user.rewardsEarned), 500));
+        return new Promise(resolve => setTimeout(() => resolve(user.rewardsEarned), 300));
     }
-    return new Promise(resolve => setTimeout(() => resolve([]), 500));
+    return new Promise(resolve => setTimeout(() => resolve([]), 300));
+};
+
+export const getRewardById = async (id: string): Promise<Reward | undefined> => {
+  return new Promise(resolve => setTimeout(() => {
+    // Search in allMockRewards which consolidates rewards from users and general ones.
+    const reward = allMockRewards.find(r => r.id === id);
+    resolve(reward);
+  }, 300));
 };
 
 // Default brand name for AI share preview, can be overridden in the form.
